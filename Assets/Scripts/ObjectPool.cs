@@ -11,15 +11,30 @@ public class ObjectPool : MonoBehaviour
 
     protected void Initialize(GameObject prefab)
     {
-        GameObject spawned = Instantiate(prefab, _container.transform);
-        spawned.SetActive(false);
+        for (int i = 0; i < _capacity; i++)
+        {
+            GameObject spawned = Instantiate(prefab, _container.transform);
+            spawned.SetActive(false);
 
-        _pools.Add(spawned);
-
+            _pools.Add(spawned);
+        }
     }
+    
+    protected void Initialize(GameObject[] prefabs)
+    {
+        for (int i = 0; i < _capacity; i++)
+        {
+            int randomIndex = Random.Range(0, prefabs.Length);
+            GameObject spawned = Instantiate(prefabs[randomIndex], _container.transform);
+            spawned.SetActive(false);
+
+            _pools.Add(spawned);
+        }
+    }
+
     protected bool TryGetObject(out GameObject result)
     {
-        result = _pools.First(p => p.activeSelf == false);
+        result = _pools.FirstOrDefault(p => p.activeSelf == false);
         return result != null;
     }
 }
